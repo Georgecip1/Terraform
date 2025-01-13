@@ -27,8 +27,6 @@ jobs:
 
       # Authenticate with Google Cloud
       - name: Authenticate to Google Cloud
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
         run: |
           echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
