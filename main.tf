@@ -2,7 +2,7 @@ provider "google" {
   project     = "durable-height-447621-h7"
   credentials = file("durable-height-447621-h7-dd1ddf2ecab7.json")
   region      = "us-central1"
-  zone        = "us-central1-c"
+  zone        = "us-central1-a"
 }
 
 resource "google_compute_instance" "my_instance" {
