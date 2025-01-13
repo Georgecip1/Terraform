@@ -30,6 +30,8 @@ jobs:
         run: |
           echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > credentials.json
           export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json  # Set the variable in the environment
 
       # Initialize Terraform
       - name: Terraform Init
@@ -47,6 +49,7 @@ jobs:
       - name: Terraform Plan
         env:
           TF_CLI_CONFIG_FILE: /dev/null
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Pass the secret value to Terraform
         run: terraform plan -input=false
 
       # Apply Terraform changes (on push to main)
@@ -54,4 +57,5 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           TF_CLI_CONFIG_FILE: /dev/null
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Pass the secret value to Terraform
         run: terraform apply -auto-approve -input=false
