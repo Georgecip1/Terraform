@@ -1,6 +1,6 @@
 provider "google" {
   project     = "durable-height-447621-h7"
-  credentials = file("durable-height-447621-h7-dd1ddf2ecab7.json")
+  credentials = file(var.GOOGLE_APPLICATION_CREDENTIALS)
   region      = "us-central1"
   zone        = "us-central1-a"
 }
