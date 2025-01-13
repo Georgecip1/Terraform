@@ -1,0 +1,59 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      # Authenticate with Google Cloud
+      - name: Authenticate to Google Cloud
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        run: |
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
+
+      # Initialize Terraform
+      - name: Terraform Init
+        env:
+          TF_CLI_CONFIG_FILE: /dev/null
+        run: terraform init
+
+      # Check Terraform formatting
+      - name: Terraform Format
+        env:
+          TF_CLI_CONFIG_FILE: /dev/null
+        run: terraform fmt -check
+
+      # Plan Terraform changes
+      - name: Terraform Plan
+        env:
+          TF_CLI_CONFIG_FILE: /dev/null
+        run: terraform plan -input=false
+
+      # Apply Terraform changes (on push to main)
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          TF_CLI_CONFIG_FILE: /dev/null
+        run: terraform apply -auto-approve -input=false
