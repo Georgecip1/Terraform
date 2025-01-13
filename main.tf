@@ -1,6 +1,6 @@
 provider "google" {
   project     = "durable-height-447621-h7"
-  credentials = file(var.GOOGLE_APPLICATION_CREDENTIALS)
+  credentials = file(var.GOOGLE_APPLICATION_CREDENTIALS) # Use the declared variable
   region      = "us-central1"
   zone        = "us-central1-a"
 }
